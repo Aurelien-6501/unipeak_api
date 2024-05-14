@@ -1,11 +1,24 @@
+require('dotenv').config();
+const mongoose = require('./public/utils/mongoose'); 
+const dataBaseUnipeak = mongoose.connection;
+
+dataBaseUnipeak.on('error', console.error.bind(console, 'Erreur connexion a la base:'));
+dataBaseUnipeak.once('open', () => {
+  console.log('Connexion a la base reussie');
+});
+
 var createError = require('http-errors');
 var express = require('express');
+var cors = require('cors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+
+var bodyParser = require("body-parser");
+var http = require("http");
 
 var app = express();
 
@@ -19,6 +32,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(cors());
+
+// Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
