@@ -20,18 +20,19 @@ class UserController {
     }
   }
 
-  static async createUser(req, res) {
-    try {
-      let { email, name, password } = req.body;
-      password = await Hash.hash(password);
-      const user = new User({ email, name, password });
-      await user.save();
-      res.send(user);
-      console.log("User created successfully:");
-    } catch (e) {
-      res.status(400).send({ error: e.stack });
-    }
+static async createUser(req, res) {
+  try {
+    let { email, name, password } = req.body;
+    password = await Hash.hash(password);
+    const user = new User({ email, name, password });
+    await user.save();
+    res.status(201).send(user); // Renvoie l'utilisateur créé avec un statut 201
+    console.log("User created successfully:");
+  } catch (e) {
+    res.status(400).send({ error: e.stack }); // Envoie le message d'erreur en cas d'échec
   }
+}
+
   static async getCurrentUser(req, res) {
     console.log("req.user", req.user);
     res.send(req.user);
