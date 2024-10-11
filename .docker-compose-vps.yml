@@ -1,0 +1,39 @@
+version: "3.3"
+
+services:
+  # Service MongoDB
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017" # Expose MongoDB port
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=12345
+      - MONGO_INITDB_DATABASE=unipeak-data-base
+    volumes:
+      - mongo_data:/data/db # Volume to persist data
+      - ./mongo-init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro # Init script for MongoDB
+
+  # Service Mongo Express for DB Management
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8081:8081" # Expose Mongo Express on port 8081
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_BASICAUTH_USERNAME=mongo
+      - ME_CONFIG_BASICAUTH_PASSWORD=12345
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=mongo
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=12345
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo:12345@mongo:27017/unipeak-data-base
+    depends_on:
+      - mongo # Wait for MongoDB to start before running Mongo Express
+
+volumes:
+  mongo_data:
+    external: true
+    name: unipeak-volume

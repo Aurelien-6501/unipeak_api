@@ -1,8 +1,8 @@
-version: '3.3'
+version: "3.3"
 services:
   mongo:
     ports:
-    - '27017:27017'
+      - "27017:27017"
     expose:
       - 27017
     container_name: mongodb
@@ -11,13 +11,13 @@ services:
       options:
         max-size: 1g
     environment:
-    - MONGO_INITDB_ROOT_USERNAME=mongo
-    - MONGO_INITDB_ROOT_PASSWORD=12345
-    - MONGO_INITDB_DATABASE=unipeak-data-base
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=12345
+      - MONGO_INITDB_DATABASE=unipeak-data-base
     image: mongo
     volumes:
-    - mongo_data:/var/lib/mongodb/data
-    - ./mongo-init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - mongo_data:/var/lib/mongodb/data
+      - ./mongo-init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
   mongo-express:
     image: mongo-express
@@ -34,7 +34,7 @@ services:
       ME_CONFIG_MONGODB_URL: mongo://mongo:12345@mongo:27017/unipeak-data-base
     depends_on:
       - mongo
-volumes: 
+volumes:
   mongo_data:
     external: true
     name: unipeak-volume
